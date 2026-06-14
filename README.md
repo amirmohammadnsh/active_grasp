@@ -10,6 +10,7 @@ This repository contains the implementation of our IROS 2022 submission, _"Close
 > all necessary compatibility patches.
 
 https://github.com/user-attachments/assets/08ee74d1-cb90-4dd3-9556-a5eb6cf30b0e
+
 ---
 
 ## Prerequisites
