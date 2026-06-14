@@ -6,9 +6,10 @@ This repository contains the implementation of our IROS 2022 submission, _"Close
 > tested on Ubuntu 20.04 with a native ROS Noetic install. This guide covers
 > setting up and running the full experiment suite (simulation + real-world
 > hardware) on Ubuntu 22.04 using ROS Noetic via the
-> [RoboStack](https://github.com/robostack/ros_noetic) conda distribution, with
+> [RoboStack](https://robostack.github.io/index.html) conda distribution, with
 > all necessary compatibility patches.
 
+https://github.com/user-attachments/assets/08ee74d1-cb90-4dd3-9556-a5eb6cf30b0e
 ---
 
 ## Prerequisites
@@ -40,7 +41,8 @@ conda install -c robostack-noetic ros-noetic-ros-control \
                 ros-noetic-control-toolbox ros-noetic-joint-limits-interface
 
 conda install -c conda-forge -c robostack-noetic ros-noetic-moveit \
-                ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control
+                ros-noetic-gazebo-ros-pkgs ros-noetic-gazebo-ros-control \
+                ros-noetic-kdl-parser-py
 ```
 
 ### 3. Install Python ML & Simulation Dependencies
@@ -95,6 +97,8 @@ git clone -b noetic-devel https://github.com/frankaemika/franka_ros.git
 
 ```bash
 cd ~/ag_ws/src/active_grasp
+# Unpin pybullet version to avoid build failures on newer Python
+sed -i 's/pybullet==2.7.9/pybullet/g' requirements.txt
 pip install -r requirements.txt
 
 cd ~/ag_ws/src/vgn
@@ -137,6 +141,16 @@ EOF
 ### 8. Apply Compatibility Patches
 
 #### vgn
+
+> **Note about missing VGN files:** Depending on when the vgn repository was
+> cloned, source files such as `rviz.py` or certain `utils` functions may be
+> absent from the working tree. If you encounter `ImportError` for these,
+> ensure you are on the latest `devel` branch:
+> ```bash
+> cd ~/ag_ws/src/vgn
+> git checkout devel
+> git pull origin devel
+> ```
 
 ```bash
 # Fix NumPy 2.x indexing (fancy indexing returns 2D array in newer NumPy)
@@ -420,6 +434,6 @@ python3 src/active_grasp/scripts/run.py nbv --wait-for-input
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file
+This project is licensed under the MIT License, see the [LICENSE](LICENSE) file
 for details. External dependencies (vgn, robot_helpers, trac_ik, etc.) have their
 own licenses.
